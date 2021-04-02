@@ -15,8 +15,8 @@
           Trending:
           <span
             v-for="trend in trending"
-            :key="(index, trend)"
-            @click="input = trend"
+            :key="trend"
+            @click="$router.push('/search/' + trend)"
           >
             {{ trend }}
           </span>

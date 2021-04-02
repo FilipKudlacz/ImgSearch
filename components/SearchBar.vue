@@ -1,6 +1,6 @@
 <template>
   <div class="searchbar-wrapper">
-    <div class="searchbar">
+    <div class="searchbar" :class="{ dark: dark }">
       <div class="icon">
         <img src="../static/search.png" alt="search" />
       </div>
@@ -8,7 +8,11 @@
         v-model="input"
         type="text"
         placeholder="Search free high-resolution photos"
+        @keyup.enter="search"
       />
+      <div class="close">
+        <img src="../static/close.png" alt="close" @click="clear" />
+      </div>
     </div>
     <div class="results"></div>
   </div>
@@ -21,11 +25,28 @@ export default {
       default: '',
       type: String,
     },
+    dark: {
+      default: false,
+      type: Boolean,
+    },
   },
   data() {
     return {
       input: '',
     }
+  },
+  mounted() {
+    if (this.phrase) {
+      this.input = this.phrase
+    }
+  },
+  methods: {
+    search() {
+      this.$router.push('/search/' + this.input)
+    },
+    clear() {
+      this.input = ''
+    },
   },
 }
 </script>
@@ -69,6 +90,28 @@ export default {
       border-radius: 5px;
       font-size: 16px;
       padding-left: 55px;
+      padding-right: 30px;
+    }
+
+    .close {
+      position: absolute;
+      right: 10px;
+      cursor: pointer;
+      height: 18px;
+    }
+  }
+
+  .dark {
+    .icon {
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    input {
+      background: #e5e5e5;
+      border-radius: 18px;
     }
   }
 }
