@@ -13,7 +13,7 @@
         </span>
       </p>
     </div>
-    <div class="results-wrapper">
+    <div v-if="results.length > 0" class="results-wrapper">
       <div v-for="result in results" :key="result.id" class="result">
         <img :src="result.urls.small" class="photo" />
         <div class="tags">
@@ -26,6 +26,11 @@
             {{ tag.title }}
           </div>
         </div>
+      </div>
+    </div>
+    <div v-else-if="loaded" class="results-wrapper">
+      <div class="no-results">
+        {{ `Sorry, we couldn't find any photos for "${phrase}"` }}
       </div>
     </div>
   </div>
@@ -180,6 +185,14 @@ a {
         cursor: pointer;
       }
     }
+  }
+
+  .no-results {
+    position: absolute;
+    font-size: 40px;
+    top: 50vh;
+    left: 50%;
+    transform: translateX(-480px);
   }
 }
 </style>

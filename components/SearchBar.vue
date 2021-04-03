@@ -67,6 +67,7 @@ export default {
     }
     this.allTags = this.$store.state.autocomplete.autocomplete
     this.checkSuggestions()
+    this.suggestionsActive = false
   },
   methods: {
     search() {
