@@ -95,6 +95,7 @@ export default {
   font-size: 50px;
   letter-spacing: 1px;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .nav-wrapper {
@@ -102,7 +103,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   width: 70%;
-  padding-bottom: 100px;
+  padding-bottom: 10px;
   padding-top: 50px;
 
   p {

@@ -4,6 +4,28 @@
   </div>
 </template>
 
+<script>
+import key from '@/config.json'
+
+export default {
+  mounted() {
+    const self = this
+    const collection = []
+
+    this.$axios
+      .get(
+        self.$store.state.api.api + `topics?per_page=30&client_id=${key.key}`
+      )
+      .then((res) => {
+        res.data.forEach((record) => {
+          collection.push(record.slug)
+        })
+        self.$store.commit('autocomplete/setAutocomplete', collection)
+      })
+  },
+}
+</script>
+
 <style>
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
