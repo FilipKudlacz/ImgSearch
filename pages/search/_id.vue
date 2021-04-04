@@ -1,5 +1,11 @@
 <template>
   <div class="container">
+    <div v-if="isModalOpen === true" class="hide" />
+    <Modal
+      v-if="isModalOpen === true"
+      :id="modalId"
+      @closeModal="isModalOpen = false"
+    />
     <Loader v-if="!loaded" class="the-loader" />
     <div v-else class="nav-wrapper">
       <div class="search-wrapper">
@@ -15,7 +21,11 @@
     </div>
     <div v-if="results.length > 0" class="results-wrapper">
       <div v-for="result in results" :key="result.id" class="result">
-        <img :src="result.urls.small" class="photo" />
+        <img
+          :src="result.urls.small"
+          class="photo"
+          @click="openModal(result)"
+        />
         <div class="tags">
           <div
             v-for="tag in result.tags"
@@ -40,11 +50,13 @@
 import SearchBar from '@/components/SearchBar.vue'
 import key from '@/config.json'
 import Loader from '@/components/Loader.vue'
+import Modal from '@/components/Modal.vue'
 
 export default {
   components: {
     SearchBar,
     Loader,
+    Modal,
   },
   data() {
     return {
@@ -53,6 +65,8 @@ export default {
       key: '',
       results: [],
       loaded: false,
+      isModalOpen: false,
+      modalId: '',
     }
   },
   mounted() {
@@ -68,6 +82,12 @@ export default {
         self.results = res.data.results
         self.loaded = true
       })
+  },
+  methods: {
+    openModal(result) {
+      this.modalId = result.id
+      this.isModalOpen = true
+    },
   },
 }
 </script>
@@ -86,6 +106,16 @@ export default {
   align-items: center;
   text-align: center;
   flex-direction: column;
+}
+
+.hide {
+  background: rgba(21, 21, 21, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
 .the-loader {
