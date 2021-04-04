@@ -12,12 +12,16 @@
         <SearchBar :phrase="$route.params.id" class="search" :dark="true" />
       </div>
       <h1 class="title">{{ $route.params.id }}</h1>
-      <p class="trending">
-        Trending:
-        <span v-for="trend in trending" :key="trend" @click="input = trend">
+      <div class="trending">
+        <div
+          v-for="trend in trending"
+          :key="trend"
+          class="trend"
+          @click="$router.push(`/search/${trend}`)"
+        >
           {{ trend }}
-        </span>
-      </p>
+        </div>
+      </div>
     </div>
     <div v-if="results.length > 0" class="results-wrapper">
       <div v-for="result in results" :key="result.id" class="result">
@@ -60,9 +64,8 @@ export default {
   },
   data() {
     return {
-      trending: ['flower', 'wallpapers', 'backgrounds', 'happy', 'love'],
+      trending: [],
       phrase: '',
-      key: '',
       results: [],
       loaded: false,
       isModalOpen: false,
@@ -80,6 +83,8 @@ export default {
       )
       .then((res) => {
         self.results = res.data.results
+        self.updateTrending()
+        self.updateSearch()
         self.loaded = true
       })
   },
@@ -87,6 +92,18 @@ export default {
     openModal(result) {
       this.modalId = result.id
       this.isModalOpen = true
+    },
+    updateTrending() {
+      this.results.forEach((result) => {
+        result.tags.forEach((tag) => {
+          if (!this.trending.includes(tag.title)) {
+            this.trending.push(tag.title)
+          }
+        })
+      })
+    },
+    updateSearch() {
+      this.$store.commit('autocomplete/updateAutocompleter', this.trending)
     },
   },
 }
@@ -167,10 +184,19 @@ a {
 }
 
 .trending {
-  font-weight: bold;
+  display: flex;
+  width: 100%;
+  overflow: auto;
 
-  span {
-    font-weight: normal;
+  .trend {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border: 1px solid lightgrey;
+    padding: 0 25px;
+    padding-bottom: 3px;
+    border-radius: 5px;
+    margin-right: 5px;
 
     &:hover {
       cursor: pointer;
@@ -195,6 +221,10 @@ a {
       height: 300px;
       background: grey;
       object-fit: cover;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     .tags {
